@@ -12,7 +12,8 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/shreeji-ecom')
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/shreeji-ecom';
+mongoose.connect(MONGODB_URI)
   .then(() => console.log('Connected to MongoDB (shreeji-ecom)'))
   .catch(err => console.error('MongoDB connection error:', err));
 
@@ -60,6 +61,10 @@ app.delete('/api/products/:id', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Backend server running on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Backend server running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
