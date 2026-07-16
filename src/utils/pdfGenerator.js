@@ -148,7 +148,7 @@ export const generateDealsPDF = async (products) => {
     const marginX = 8;  // Reduced side spacing
     const marginY = 22; // Slightly reduced top spacing
     const usableWidth = pageWidth - (marginX * 2);
-    const usableHeight = pageHeight - marginY - 12; // Reduced bottom space
+    const usableHeight = pageHeight - marginY - 24; // Increased bottom space to prevent overlap
 
     const cellWidth = usableWidth / columns;
     const cellHeight = usableHeight / rows;
