@@ -136,7 +136,7 @@ export const generateDealsPDF = async (products) => {
   doc.text(mapLinkText, textX, btnY + 10.2, { align: 'left', charSpace: charSpacing });
 
   // Make the entire button clickable
-  doc.link(btnX, btnY, btnW, btnH, { url: 'https://maps.app.goo.gl/d5zdm7bMtCwm7nBX7?g_st=iw' });
+  doc.link(btnX, btnY, btnW, btnH, { url: 'https://maps.app.goo.gl/owLzs9nPkBkU32Fz9?g_st=iw' });
 
   // --- PRODUCT PAGES ---
   if (products.length > 0) {
