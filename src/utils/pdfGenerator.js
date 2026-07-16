@@ -234,9 +234,9 @@ export const generateDealsPDF = async (products) => {
       doc.circle(badgeX, badgeY, badgeRadius, 'S');
       
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(12);
+      doc.setFontSize(15);
       doc.setFont('helvetica', 'bold');
-      doc.text(`${index + 1}`, badgeX, badgeY + 4.0, { align: 'center' });
+      doc.text(`${index + 1}`, badgeX, badgeY, { align: 'center', baseline: 'middle' });
 
       // Text underneath (Centered vertically in the red space)
       const textY = y + imgAreaH + 10.5;
