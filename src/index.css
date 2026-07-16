@@ -614,3 +614,10 @@ main {
   height: 28px;
   object-fit: contain;
 }
+
+.branding-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  letter-spacing: 0.2px;
+}

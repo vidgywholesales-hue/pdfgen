@@ -79,7 +79,8 @@ function App() {
       <footer className="app-footer">
         <div className="branding-container">
           <span className="branding-text">Software developed by</span>
-          <img src="/webiox-logo.png" alt="Webiox Infotech" className="webiox-logo" />
+          <img src="/webiox-logo.png" alt="Webiox" className="webiox-logo" />
+          <span className="branding-name">Webiox Tech Solution</span>
         </div>
       </footer>
     </div>
