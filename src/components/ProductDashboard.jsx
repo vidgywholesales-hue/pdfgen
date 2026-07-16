@@ -16,7 +16,12 @@ const ProductDashboard = ({ selectedProducts, toggleSelection, clearSelection })
     try {
       const response = await fetch('/api/products');
       const data = await response.json();
-      setProducts(data);
+      if (Array.isArray(data)) {
+        setProducts(data);
+      } else {
+        console.error('Server returned an error:', data);
+        setProducts([]); // Fallback to empty array to prevent crash
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
