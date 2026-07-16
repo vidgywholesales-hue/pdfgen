@@ -113,8 +113,8 @@ const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
             />
           </div>
 
-          <div className="form-group" style={{ display: 'flex', gap: '1rem' }}>
-            <div style={{ flex: 1 }}>
+          <div className="form-group flex-group">
+            <div className="flex-item">
               <label className="form-label">Price ($)</label>
               <input 
                 type="number" 
@@ -126,7 +126,7 @@ const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
                 required 
               />
             </div>
-            <div style={{ flex: 1 }}>
+            <div className="flex-item">
               <label className="form-label">Status</label>
               <select 
                 className="form-input" 
