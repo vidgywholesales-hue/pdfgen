@@ -587,7 +587,7 @@ main {
   padding: 1.5rem 4rem;
   background-color: transparent;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .branding-container {
