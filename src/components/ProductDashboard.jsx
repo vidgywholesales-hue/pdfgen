@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Search, CheckCircle, Plus, Trash2, XCircle } from 'lucide-react';
+import { Search, CheckCircle, Plus, Trash2, XCircle, CheckSquare } from 'lucide-react';
 import AddProductModal from './AddProductModal';
 
-const ProductDashboard = ({ selectedProducts, toggleSelection, clearSelection }) => {
+const ProductDashboard = ({ selectedProducts, toggleSelection, clearSelection, selectAll }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -75,6 +75,13 @@ const ProductDashboard = ({ selectedProducts, toggleSelection, clearSelection })
           <button className="btn-danger" style={{ width: 'auto', marginTop: 0 }} onClick={clearSelection}>
             <XCircle size={20} style={{ marginRight: '8px' }} />
             Clear Selection
+          </button>
+        )}
+        
+        {filteredProducts.length > 0 && (
+          <button className="btn-secondary" style={{ width: 'auto', marginTop: 0, backgroundColor: 'var(--card-bg)', color: 'var(--text-main)', border: '1px solid var(--border-color)' }} onClick={() => selectAll(filteredProducts)}>
+            <CheckSquare size={20} style={{ marginRight: '8px' }} />
+            Select All
           </button>
         )}
 

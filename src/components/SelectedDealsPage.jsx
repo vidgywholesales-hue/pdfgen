@@ -1,8 +1,8 @@
 import React from 'react';
-import { Trash2, FileDown } from 'lucide-react';
+import { Trash2, FileDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { generateDealsPDF } from '../utils/pdfGenerator';
 
-const SelectedDealsPage = ({ selectedProducts, updateProduct, removeProduct }) => {
+const SelectedDealsPage = ({ selectedProducts, updateProduct, removeProduct, reorderProduct }) => {
 
   const handleGenerate = async () => {
     if (selectedProducts.length === 0) return;
@@ -29,8 +29,8 @@ const SelectedDealsPage = ({ selectedProducts, updateProduct, removeProduct }) =
       </div>
 
       <div className="deals-list">
-        {selectedProducts.map(product => (
-          <div key={product.id} className="deal-list-item">
+        {selectedProducts.map((product, index) => (
+          <div key={product.id + index} className="deal-list-item">
             <div className="deal-image-stage">
               <img src={product.image} alt={product.name} className="deal-image" />
             </div>
@@ -58,13 +58,36 @@ const SelectedDealsPage = ({ selectedProducts, updateProduct, removeProduct }) =
               </div>
             </div>
 
-            <button 
-              className="btn-danger-icon" 
-              onClick={() => removeProduct(product.id)}
-              title="Remove product"
-            >
-              <Trash2 size={20} />
-            </button>
+            <div className="deal-actions" style={{ display: 'flex', flexDirection: 'column', gap: '8px', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', gap: '4px' }}>
+                <button 
+                  className="btn-secondary"
+                  style={{ padding: '8px', background: 'var(--card-bg)', border: '1px solid var(--border-color)', color: 'var(--text-main)', cursor: 'pointer', borderRadius: '4px' }}
+                  onClick={() => reorderProduct(index, 'up')}
+                  disabled={index === 0}
+                  title="Move up"
+                >
+                  <ArrowUp size={16} />
+                </button>
+                <button 
+                  className="btn-secondary"
+                  style={{ padding: '8px', background: 'var(--card-bg)', border: '1px solid var(--border-color)', color: 'var(--text-main)', cursor: 'pointer', borderRadius: '4px' }}
+                  onClick={() => reorderProduct(index, 'down')}
+                  disabled={index === selectedProducts.length - 1}
+                  title="Move down"
+                >
+                  <ArrowDown size={16} />
+                </button>
+              </div>
+              <button 
+                className="btn-danger-icon" 
+                onClick={() => removeProduct(product.id)}
+                title="Remove product"
+                style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+              >
+                <Trash2 size={20} />
+              </button>
+            </div>
           </div>
         ))}
       </div>

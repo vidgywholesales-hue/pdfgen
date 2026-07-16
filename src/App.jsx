@@ -27,6 +27,34 @@ function App() {
     }));
   };
 
+  const selectAllProducts = (productsToSelect) => {
+    setSelectedProducts(prev => {
+      const newProducts = [...prev];
+      productsToSelect.forEach(product => {
+        if (!newProducts.find(p => p.id === product.id)) {
+          newProducts.push({ ...product, customName: product.name, customPrice: product.price.toString() });
+        }
+      });
+      return newProducts;
+    });
+  };
+
+  const reorderSelectedProduct = (index, direction) => {
+    setSelectedProducts(prev => {
+      const newProducts = [...prev];
+      if (direction === 'up' && index > 0) {
+        const temp = newProducts[index - 1];
+        newProducts[index - 1] = newProducts[index];
+        newProducts[index] = temp;
+      } else if (direction === 'down' && index < newProducts.length - 1) {
+        const temp = newProducts[index + 1];
+        newProducts[index + 1] = newProducts[index];
+        newProducts[index] = temp;
+      }
+      return newProducts;
+    });
+  };
+
   const removeSelectedProduct = (id) => {
     setSelectedProducts(prev => prev.filter(p => p.id !== id));
   };
@@ -64,6 +92,7 @@ function App() {
             selectedProducts={selectedProducts} 
             toggleSelection={toggleProductSelection} 
             clearSelection={clearSelection}
+            selectAll={selectAllProducts}
           />
         )}
         
@@ -72,6 +101,7 @@ function App() {
             selectedProducts={selectedProducts}
             updateProduct={updateSelectedProduct}
             removeProduct={removeSelectedProduct}
+            reorderProduct={reorderSelectedProduct}
           />
         )}
       </main>
