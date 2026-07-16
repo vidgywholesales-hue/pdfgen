@@ -222,7 +222,7 @@ export const generateDealsPDF = async (products) => {
       }
 
       // Add Sequential Number Badge in Top-Left Corner
-      const badgeRadius = 4.5;
+      const badgeRadius = 7;
       const badgeX = x + badgeRadius + 2;
       const badgeY = y + badgeRadius + 2;
       
@@ -234,9 +234,9 @@ export const generateDealsPDF = async (products) => {
       doc.circle(badgeX, badgeY, badgeRadius, 'S');
       
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(8);
+      doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
-      doc.text(`${index + 1}`, badgeX, badgeY + 2.8, { align: 'center' });
+      doc.text(`${index + 1}`, badgeX, badgeY + 4.2, { align: 'center' });
 
       // Text underneath (Centered vertically in the red space)
       const textY = y + imgAreaH + 10.5;
