@@ -221,8 +221,25 @@ export const generateDealsPDF = async (products) => {
         }
       }
 
-      // Text underneath (Centered in red space)
-      const textY = y + imgAreaH + 6;
+      // Add Sequential Number Badge in Top-Left Corner
+      const badgeRadius = 4.5;
+      const badgeX = x + badgeRadius + 2;
+      const badgeY = y + badgeRadius + 2;
+      
+      doc.setFillColor(...brandColor);
+      doc.circle(badgeX, badgeY, badgeRadius, 'F');
+      
+      doc.setDrawColor(255, 255, 255);
+      doc.setLineWidth(0.4);
+      doc.circle(badgeX, badgeY, badgeRadius, 'S');
+      
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${index + 1}`, badgeX, badgeY + 2.8, { align: 'center' });
+
+      // Text underneath (Centered vertically in the red space)
+      const textY = y + imgAreaH + 10.5;
       const centerX = x + (cardW / 2);
 
       // Product Name
@@ -234,23 +251,83 @@ export const generateDealsPDF = async (products) => {
       const safeName = nameLines.length > 1 ? nameLines[0].substring(0, 18) + '...' : nameLines[0];
       doc.text(safeName, centerX, textY, { align: 'center' });
 
-      // Price 
+      currentItem++;
+    }
+    
+    // --- PRICE LIST PAGE ---
+    doc.addPage();
+    currentPage++;
+    drawPageHeaderFooter(doc, pageWidth, pageHeight, currentPage);
+
+    doc.setTextColor(...brandColor);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('DETAILS & PRICE LIST', pageWidth / 2, 28, { align: 'center', charSpace: 1 });
+
+    let listY = 38; // Starting Y position for the list
+    const leftMargin = 15;
+    const numWidth = 15;
+    const detailsWidth = 120;
+    const priceWidth = 45;
+    const lineHeight = 10;
+    
+    // Table Header
+    doc.setFillColor(...brandColor);
+    doc.rect(leftMargin, listY, pageWidth - leftMargin * 2, 10, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('NO.', leftMargin + 5, listY + 7);
+    doc.text('DETAILS', leftMargin + numWidth + 5, listY + 7);
+    doc.text('PRICE', leftMargin + numWidth + detailsWidth + 5, listY + 7);
+    
+    listY += 10;
+    
+    doc.setTextColor(...textColor);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+
+    for (let index = 0; index < products.length; index++) {
+      const product = products[index];
+      
+      // Check if we need a new page for the list
+      if (listY > pageHeight - 30) {
+        doc.addPage();
+        currentPage++;
+        drawPageHeaderFooter(doc, pageWidth, pageHeight, currentPage);
+        listY = 30; // reset Y
+      }
+      
+      // Alternating row background
+      if (index % 2 === 0) {
+        doc.setFillColor(250, 250, 250);
+        doc.rect(leftMargin, listY, pageWidth - leftMargin * 2, lineHeight, 'F');
+      }
+
+      // Number
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${index + 1}`, leftMargin + 5, listY + 6.5);
+      
+      // Details (Name)
+      doc.setFont('helvetica', 'normal');
+      const nameLines = doc.splitTextToSize(product.customName || '', detailsWidth - 10);
+      const safeName = nameLines.length > 0 ? nameLines[0].substring(0, 60) : '';
+      doc.text(safeName, leftMargin + numWidth + 5, listY + 6.5);
+      
+      // Price
       const priceStr = parseFloat(product.customPrice) > 0
         ? `Rs. ${parseFloat(product.customPrice).toFixed(2)}`
         : 'OUT OF STOCK';
-
+      
       doc.setFont('helvetica', 'bold');
-      if (priceStr === 'OUT OF STOCK') {
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(7);
-      } else {
-        doc.setTextColor(255, 255, 255); // White text
-        doc.setFontSize(10);
-      }
+      doc.text(priceStr, leftMargin + numWidth + detailsWidth + 5, listY + 6.5);
 
-      doc.text(priceStr, centerX, textY + 5.5, { align: 'center' });
-
-      currentItem++;
+      // Draw bottom border for row
+      doc.setDrawColor(228, 228, 231);
+      doc.setLineWidth(0.1);
+      doc.line(leftMargin, listY + lineHeight, pageWidth - leftMargin, listY + lineHeight);
+      
+      listY += lineHeight;
     }
   }
 
