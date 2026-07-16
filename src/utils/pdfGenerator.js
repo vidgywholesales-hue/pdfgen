@@ -58,23 +58,6 @@ export const generateDealsPDF = async (products) => {
     console.error('Could not load logo image:', err);
   }
 
-  // Fetch Webiox Branding
-  let webioxBranding = null;
-  try {
-    const webioxData = await fetch('/WEBIOX icon + name.png')
-      .then(res => res.blob())
-      .then(blob => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      }));
-    const webioxDims = await getImageDimensions(webioxData);
-    webioxBranding = { data: webioxData, dims: webioxDims };
-  } catch (err) {
-    console.error('Could not load Webiox branding:', err);
-  }
-
   // Contact Info (Bottom)
   const footerY = 225; // Raised slightly to accommodate larger sizes
 
@@ -174,7 +157,7 @@ export const generateDealsPDF = async (products) => {
     let currentItem = 0;
 
     doc.addPage();
-    drawPageHeaderFooter(doc, pageWidth, pageHeight, currentPage, webioxBranding);
+    drawPageHeaderFooter(doc, pageWidth, pageHeight, currentPage);
 
     for (let index = 0; index < products.length; index++) {
       const product = products[index];
@@ -184,7 +167,7 @@ export const generateDealsPDF = async (products) => {
         doc.addPage();
         currentPage++;
         currentItem = 0;
-        drawPageHeaderFooter(doc, pageWidth, pageHeight, currentPage, webioxBranding);
+        drawPageHeaderFooter(doc, pageWidth, pageHeight, currentPage);
       }
 
       const col = currentItem % columns;
@@ -274,7 +257,7 @@ export const generateDealsPDF = async (products) => {
   doc.save('vidgy-catalog.pdf');
 };
 
-function drawPageHeaderFooter(doc, pageWidth, pageHeight, pageNumber, webioxBranding) {
+function drawPageHeaderFooter(doc, pageWidth, pageHeight, pageNumber) {
   const brandColor = [180, 56, 50];
   const textColor = [9, 9, 11];
 
@@ -296,18 +279,4 @@ function drawPageHeaderFooter(doc, pageWidth, pageHeight, pageNumber, webioxBran
   doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
   doc.text(`PAGE ${pageNumber}`, pageWidth / 2, pageHeight - 12, { align: 'center', charSpace: 1 });
-
-  // Webiox Branding
-  if (webioxBranding && webioxBranding.data) {
-    const bHeight = 5; // Clean, small height
-    const scale = bHeight / webioxBranding.dims.height;
-    const bWidth = webioxBranding.dims.width * scale;
-    
-    doc.setTextColor(150, 150, 150);
-    doc.setFontSize(7);
-    doc.setFont('helvetica', 'normal');
-    const brandText = 'Designed by';
-    doc.text(brandText, pageWidth - bWidth - 19, pageHeight - 11);
-    doc.addImage(webioxBranding.data, 'PNG', pageWidth - bWidth - 6, pageHeight - 15, bWidth, bHeight);
-  }
 }
