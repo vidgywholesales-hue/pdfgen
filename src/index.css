@@ -618,6 +618,6 @@ main {
 .branding-name {
   font-size: 0.95rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: #0E5E64;
   letter-spacing: 0.2px;
 }
