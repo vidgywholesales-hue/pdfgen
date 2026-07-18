@@ -71,7 +71,7 @@ export const generateDealsPDF = async (products) => {
   doc.text(contactText, contactX, footerY, { align: 'left', charSpace: contactSpacing });
 
   // Phone numbers as clickable button pills
-  const bulkText = 'Bulk: +91 7096513055';
+  const bulkText = 'Bulk: +91 7096513044';
   const looseText = 'Loose: +91 9016459076';
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
@@ -95,7 +95,7 @@ export const generateDealsPDF = async (products) => {
   doc.roundedRect(startX, pillY, pillW_bulk, pillH, 5, 5, 'FD');
   doc.setTextColor(...textColor);
   doc.text(bulkText, startX + (pillW_bulk / 2), pillY + 6.8, { align: 'center' });
-  doc.link(startX, pillY, pillW_bulk, pillH, { url: 'tel:+917096513055' }); // Click to call
+  doc.link(startX, pillY, pillW_bulk, pillH, { url: 'tel:+917096513044' }); // Click to call
 
   // Draw Loose Pill Button
   const looseX = startX + pillW_bulk + gap;
@@ -108,8 +108,8 @@ export const generateDealsPDF = async (products) => {
   // Address
   doc.setTextColor(...textMuted);
   doc.setFontSize(12);
-  doc.text('12,13 Kum Kum Farm, Near Hari Karuna Farm', pageWidth / 2, footerY + 22, { align: 'center' });
-  doc.text('Dabhli Gam, Katargam Surat 395004', pageWidth / 2, footerY + 29, { align: 'center' });
+  doc.text('Dom no:-12-13, Chhaganbhai ni vadi, nr.hare krushna farm', pageWidth / 2, footerY + 22, { align: 'center' });
+  doc.text('Dabholi, Katargam, Surat 394004', pageWidth / 2, footerY + 29, { align: 'center' });
 
   // Impressive Google Maps Button
   const mapLinkText = 'VIEW ON GOOGLE MAPS';
