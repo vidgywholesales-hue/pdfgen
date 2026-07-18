@@ -68,6 +68,20 @@ function App() {
     setSelectedProducts(prev => prev.filter(p => p.id !== id));
   };
 
+  const updateCatalogProductPrice = async (id, newPrice) => {
+    try {
+      const response = await fetch(`/api/products/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ price: newPrice })
+      });
+      return response.ok;
+    } catch (error) {
+      console.error('Error updating product in catalog:', error);
+      return false;
+    }
+  };
+
   const clearSelection = () => {
     setSelectedProducts([]);
   };
@@ -112,6 +126,7 @@ function App() {
             removeProduct={removeSelectedProduct}
             reorderProduct={reorderSelectedProduct}
             moveProduct={moveProduct}
+            updateCatalogPrice={updateCatalogProductPrice}
           />
         )}
       </main>

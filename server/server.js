@@ -82,6 +82,27 @@ app.delete('/api/products/:id', async (req, res) => {
   }
 });
 
+app.put('/api/products/:id', async (req, res) => {
+  try {
+    const { price } = req.body;
+    const updateData = {};
+    if (price !== undefined) updateData.price = Number(price);
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      { $set: updateData },
+      { new: true }
+    );
+    
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    res.json(updatedProduct);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating product', error: error.message });
+  }
+});
+
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
     console.log(`Backend server running on http://localhost:${PORT}`);

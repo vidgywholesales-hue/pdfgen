@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
-import { Trash2, FileDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Trash2, FileDown, ArrowUp, ArrowDown, Save } from 'lucide-react';
 import { generateDealsPDF } from '../utils/pdfGenerator';
 
-const SelectedDealsPage = ({ selectedProducts, updateProduct, removeProduct, reorderProduct, moveProduct }) => {
+const SelectedDealsPage = ({ selectedProducts, updateProduct, removeProduct, reorderProduct, moveProduct, updateCatalogPrice }) => {
   const [draggedIndex, setDraggedIndex] = useState(null);
+
+  const handleSavePrice = async (product) => {
+    if (updateCatalogPrice) {
+      const success = await updateCatalogPrice(product.id, product.customPrice);
+      if (success) {
+        alert('Price saved to catalog successfully!');
+      } else {
+        alert('Failed to save price to catalog.');
+      }
+    }
+  };
 
   const handleDragStart = (e, index) => {
     setDraggedIndex(index);
@@ -94,13 +105,23 @@ const SelectedDealsPage = ({ selectedProducts, updateProduct, removeProduct, reo
 
               <div className="form-group price-group">
                 <label className="form-label">Price (₹)</label>
-                <input 
-                  type="number" 
-                  className="form-input" 
-                  value={product.customPrice} 
-                  step="0.01"
-                  onChange={(e) => updateProduct(product.id, 'customPrice', e.target.value)} 
-                />
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <input 
+                    type="number" 
+                    className="form-input" 
+                    value={product.customPrice} 
+                    step="0.01"
+                    onChange={(e) => updateProduct(product.id, 'customPrice', e.target.value)} 
+                  />
+                  <button 
+                    className="btn-secondary" 
+                    title="Save to Catalog"
+                    onClick={() => handleSavePrice(product)}
+                    style={{ padding: '8px', background: 'var(--card-bg)', border: '1px solid var(--border-color)', color: 'var(--text-main)', cursor: 'pointer', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <Save size={16} />
+                  </button>
+                </div>
               </div>
             </div>
 
