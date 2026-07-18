@@ -185,7 +185,7 @@ export const generateDealsPDF = async (products) => {
       doc.setFillColor(...brandColor);
       doc.roundedRect(x, y, cardW, cardH, 3, 3, 'F'); // Red full background
 
-      const textStageHeight = 22; // Increased for price and pack
+      const textStageHeight = 18;
       const imgAreaH = cardH - textStageHeight;
 
       // Draw white image stage on top
@@ -239,6 +239,7 @@ export const generateDealsPDF = async (products) => {
       doc.text(`${index + 1}`, badgeX, badgeY, { align: 'center', baseline: 'middle' });
 
       // Text underneath (Centered vertically in the red space)
+      const textY = y + imgAreaH + 10.5;
       const centerX = x + (cardW / 2);
 
       // Product Name
@@ -249,20 +250,7 @@ export const generateDealsPDF = async (products) => {
       const nameToUse = product.customName || '';
       const nameLines = doc.splitTextToSize(nameToUse, cardW - 4);
       const safeName = nameLines.length > 0 ? (nameLines.length > 1 ? nameLines[0].substring(0, 18) + '...' : nameLines[0]) : '';
-      doc.text(safeName, centerX, y + imgAreaH + 8, { align: 'center' });
-
-      // Product Price and Pack Of
-      doc.setFontSize(10);
-      const priceStrCard = parseFloat(product.customPrice) > 0
-        ? `Rs. ${parseFloat(product.customPrice).toFixed(2)}`
-        : 'OUT OF STOCK';
-      
-      let packStr = '';
-      if (product.customPackOf && product.customPackOf > 1) {
-          packStr = ` (Pack of ${product.customPackOf})`;
-      }
-
-      doc.text(priceStrCard + packStr, centerX, y + imgAreaH + 16, { align: 'center' });
+      doc.text(safeName, centerX, textY, { align: 'center' });
 
       currentItem++;
     }
