@@ -13,7 +13,7 @@ function App() {
         return prev.filter(p => p.id !== product.id);
       } else {
         // Deep copy the product so editing one doesn't affect others if they were added multiple times (though we prevent duplicates here)
-        return [...prev, { ...product, customName: product.name, customPrice: product.price.toString() }];
+        return [...prev, { ...product, customName: product.name, customPrice: product.price.toString(), customPackOf: '1' }];
       }
     });
   };
@@ -32,9 +32,18 @@ function App() {
       const newProducts = [...prev];
       productsToSelect.forEach(product => {
         if (!newProducts.find(p => p.id === product.id)) {
-          newProducts.push({ ...product, customName: product.name, customPrice: product.price.toString() });
+          newProducts.push({ ...product, customName: product.name, customPrice: product.price.toString(), customPackOf: '1' });
         }
       });
+      return newProducts;
+    });
+  };
+
+  const moveProduct = (fromIndex, toIndex) => {
+    setSelectedProducts(prev => {
+      const newProducts = [...prev];
+      const [moved] = newProducts.splice(fromIndex, 1);
+      newProducts.splice(toIndex, 0, moved);
       return newProducts;
     });
   };
@@ -102,6 +111,7 @@ function App() {
             updateProduct={updateSelectedProduct}
             removeProduct={removeSelectedProduct}
             reorderProduct={reorderSelectedProduct}
+            moveProduct={moveProduct}
           />
         )}
       </main>

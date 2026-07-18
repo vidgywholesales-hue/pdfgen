@@ -7,12 +7,17 @@ const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
   const [status, setStatus] = useState('IN STOCK');
   const [imageBase64, setImageBase64] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   if (!isOpen) return null;
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files ? e.target.files[0] : e.dataTransfer?.files[0];
     if (!file) return;
+    processImageFile(file);
+  };
+
+  const processImageFile = (file) => {
 
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -47,6 +52,27 @@ const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
       img.src = event.target.result;
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      if (file.type.startsWith('image/')) {
+        processImageFile(file);
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -141,7 +167,13 @@ const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
 
           <div className="form-group">
             <label className="form-label">Product Image</label>
-            <div className="image-upload-area">
+            <div 
+              className={`image-upload-area ${isDragging ? 'dragging' : ''}`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              style={{ border: isDragging ? '2px dashed var(--brand-color)' : '' }}
+            >
               {imageBase64 ? (
                 <div className="image-preview-container">
                   <img src={imageBase64} alt="Preview" className="image-preview" />

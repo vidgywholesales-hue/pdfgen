@@ -1,8 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Trash2, FileDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { generateDealsPDF } from '../utils/pdfGenerator';
 
-const SelectedDealsPage = ({ selectedProducts, updateProduct, removeProduct, reorderProduct }) => {
+const SelectedDealsPage = ({ selectedProducts, updateProduct, removeProduct, reorderProduct, moveProduct }) => {
+  const [draggedIndex, setDraggedIndex] = useState(null);
+
+  const handleDragStart = (e, index) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+    setTimeout(() => {
+      if (e.target) e.target.style.opacity = '0.5';
+    }, 0);
+  };
+
+  const handleDragEnd = (e) => {
+    if (e.target) e.target.style.opacity = '1';
+    setDraggedIndex(null);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e, index) => {
+    e.preventDefault();
+    if (draggedIndex !== null && draggedIndex !== index && moveProduct) {
+      moveProduct(draggedIndex, index);
+    }
+  };
 
   const handleGenerate = async () => {
     if (selectedProducts.length === 0) return;
@@ -30,7 +56,16 @@ const SelectedDealsPage = ({ selectedProducts, updateProduct, removeProduct, reo
 
       <div className="deals-list">
         {selectedProducts.map((product, index) => (
-          <div key={product.id + index} className="deal-list-item">
+          <div 
+            key={product.id + index} 
+            className="deal-list-item"
+            draggable
+            onDragStart={(e) => handleDragStart(e, index)}
+            onDragEnd={handleDragEnd}
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(e, index)}
+            style={{ cursor: 'grab', transition: 'all 0.2s ease' }}
+          >
             <div className="deal-image-stage">
               <img src={product.image} alt={product.name} className="deal-image" />
             </div>
@@ -43,6 +78,17 @@ const SelectedDealsPage = ({ selectedProducts, updateProduct, removeProduct, reo
                   className="form-input" 
                   value={product.customName} 
                   onChange={(e) => updateProduct(product.id, 'customName', e.target.value)} 
+                />
+              </div>
+
+              <div className="form-group pack-group" style={{ flex: '0 0 80px' }}>
+                <label className="form-label">Pack of</label>
+                <input 
+                  type="number" 
+                  className="form-input" 
+                  value={product.customPackOf || '1'} 
+                  min="1"
+                  onChange={(e) => updateProduct(product.id, 'customPackOf', e.target.value)} 
                 />
               </div>
 

@@ -308,9 +308,13 @@ export const generateDealsPDF = async (products) => {
       doc.setFont('helvetica', 'bold');
       doc.text(`${index + 1}`, leftMargin + 5, listY + 6.5);
       
-      // Details (Name)
+      // Details (Name and Pack of)
       doc.setFont('helvetica', 'normal');
-      const nameLines = doc.splitTextToSize(product.customName || '', detailsWidth - 10);
+      let detailsText = product.customName || '';
+      if (product.customPackOf && product.customPackOf > 1) {
+        detailsText += ` (Pack of ${product.customPackOf})`;
+      }
+      const nameLines = doc.splitTextToSize(detailsText, detailsWidth - 10);
       const safeName = nameLines.length > 0 ? nameLines[0].substring(0, 60) : '';
       doc.text(safeName, leftMargin + numWidth + 5, listY + 6.5);
       
